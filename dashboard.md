@@ -91,7 +91,45 @@
 
 ---
 
-## 4. 開發參考範例
+## 4. 後端介接API
+
+### [POST] /api/internal/elasticsearch/search
+
+### Parameter fields
+|Attribute|Type|Required|Description|
+|---|---|---|---|
+|index|String|N|值：across-cf-logpush-*|
+|body |Object|N|{ query, aggs, size } |
+
+### 用 Axios 串接 ES Client
+1.  **Client 配置**:
+```typescript
+export const esClient = new Client({
+    node: config.database.elasticsearch.host || 'http://localhost:9200',
+    auth: config.database.elasticsearch.apiKey 
+      ? { apiKey: config.database.elasticsearch.apiKey }
+      : config.database.elasticsearch.username && config.database.elasticsearch.password
+      ? {
+          username: config.database.elasticsearch.username,
+          password: config.database.elasticsearch.password
+        }
+      : undefined,
+    tls: {
+      rejectUnauthorized: false
+    }
+})
+```
+2.  **Search調用**:
+```typescript
+const response = await esClient.search({
+   index,
+   body
+});
+```
+
+---
+
+## 5. 開發參考範例
 
 若需新增報表，可參考以下標準流程：
 
