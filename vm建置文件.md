@@ -39,6 +39,12 @@ xpack.encryptedSavedObjects.encryptionKey: bae9538732f2391737093dfbd90ef642
 xpack.reporting.encryptionKey: bb6071a4909e453f6e442b572f69fd92
 xpack.security.encryptionKey: 49438c74be6a4ef8c8ae7876c74cb255
 ```
+防火牆 allow kibana 5601
+```
+sudo ufw allow 5601
+sudo ufw reload
+```
+
 
 ### Elasticsearch yml
 ```
@@ -111,3 +117,27 @@ cloudflared tunnel info across-prod // 檢查Tunnel狀況
 ```
 
 ---
+
+## 4. 用nginx
+vim /etc/nginx/conf.d/web.conf 
+```
+server {
+    listen 443 ssl;
+    server_name across-candor.twister5.cf;
+
+    ssl_certificate /etc/nginx/ssl/nginx.crt;
+    ssl_certificate_key /etc/nginx/ssl/nginx.key;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+防火牆allow 80/443
+```
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw reload
+```
