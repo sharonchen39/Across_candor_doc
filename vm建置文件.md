@@ -10,6 +10,7 @@ pm2 start npm --name "across-frontend" -- start
 
 git clone git@github.com:Twister5rd/adas-one-backend.git
 cd adas-one-backend
+git switch candor
 npm install
 npm run build
 pm2 start npm --name "across-backend" -- start
